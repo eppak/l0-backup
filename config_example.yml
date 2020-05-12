@@ -1,6 +1,7 @@
 s3:
- key: '' 
- secret: '' 
+ key: ''
+ secret: ''
+ bucket: ''
  region: ''
  endpoint: ''
 
@@ -8,10 +9,16 @@ tmp: '/tmp'
 schedule:
 
 sites:
-    - name: 'one'
-    - destination: ''
-    - assets:
-           - db: '.env'
-           - files: 
+    one:
+        destination: '/one'
+        assets:
+           db: '.env'
+           files:
                - '/home/www/site/example.com/storage/app'
+    two:
+        destination: '/two'
+        assets:
+          db: '.env'
+          files:
+              - '/home/www/site/example.org/storage/app'
 

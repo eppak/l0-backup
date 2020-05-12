@@ -37,7 +37,10 @@
         "psr-4": {
             "Tests\\": "tests/",
             "Eppak\\": "src/"
-        }
+        },
+        "files": [
+            "src/Helpers.php"
+        ]
     },
     "config": {
         "preferred-install": "dist",

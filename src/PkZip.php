@@ -1,5 +1,7 @@
 <?php namespace Eppak;
 
+use Eppak\Archives\Local;
+use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -16,11 +18,12 @@ class PkZip
 
     /**
      * PkZip constructor.
-     * @param $filename
+     * @param string $filename
      */
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
         $this->filename = $filename;
+        $this->open();
     }
 
     /**
@@ -35,23 +38,36 @@ class PkZip
     /**
      *
      */
-    private function close()
+    public function close()
     {
         $this->filesystem->getAdapter()->getArchive()->close();
     }
 
     /**
-     * @param $filename
-     * @param $content
+     * @param $name
+     * @throws FileNotFoundException
      */
-    public function add($filename, $content)
+    public function directory($name)
     {
-        $this->open();
-        $path = base_path($filename);
+        $local = new Local($name);
 
-        $this->filesystem->createDir('dir');
-        $this->filesystem->put('dir/test.txt', $content);
+        foreach ($local->list('/') as $file) {
+            if($file['type'] == 'file') {
+                $content = $local->get($file['path']);
+                $this->filesystem->put($file['path'], $content);
+            }
+        }
+    }
 
-        $this->close();
+    /**
+     * @param $file
+     * @throws FileNotFoundException
+     */
+    public function file($file)
+    {
+        $local = new Local(dirname($file));
+
+        $content = $local->get(basename($file));
+        $this->filesystem->put(basename($file), $content);
     }
 }

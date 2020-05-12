@@ -2,13 +2,13 @@
 
 namespace App\Commands;
 
-use Eppak\Local;
-use Eppak\PkZip;
-use Eppak\S3;
+use Eppak\Backup;
+use Eppak\Configuration;
+use Eppak\Contexts\Command as Context;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-use Symfony\Component\Yaml\Yaml;
+
 
 
 class BackupCommand extends Command
@@ -26,35 +26,43 @@ class BackupCommand extends Command
      * @var string
      */
     protected $description = 'Command description';
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    public function __construct(Configuration $configuration)
+    {
+        parent::__construct();
+
+        $this->configuration = $configuration;
+    }
 
     /**
      * Execute the console command.
      *
+     * @param Backup $backup
      * @return mixed
      */
-    public function handle()
+    public function handle(Backup $backup)
     {
-        // $local = new Local('/home/alkeidon/test/');
+        $backup->run(new Context($this));
 
-	$value = Yaml::parseFile('config_example.yml', Yaml::PARSE_OBJECT_FOR_MAP);
-
-dd($value);
-
-	// new S3();
-
-        // $zip = new PkZip('/home/alkeidon/test.zip');
-        // $zip->add('test.txt', time());
-
+        return 0;
     }
 
     /**
      * Define the command's schedule.
      *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param Schedule $schedule
      * @return void
      */
     public function schedule(Schedule $schedule): void
     {
-        // $schedule->command(static::class)->everyMinute();
+        $cron = $this->configuration->get('schedule');
+
+        if ($cron) {
+            $schedule->command(static::class)->cron($cron);
+        }
     }
 }
