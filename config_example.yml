@@ -1,0 +1,17 @@
+s3:
+ key: '' 
+ secret: '' 
+ region: ''
+ endpoint: ''
+
+tmp: '/tmp'
+schedule:
+
+sites:
+    - name: 'one'
+    - destination: ''
+    - assets:
+           - db: '.env'
+           - files: 
+               - '/home/www/site/example.com/storage/app'
+

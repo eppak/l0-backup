@@ -8,6 +8,9 @@ use Eppak\S3;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
+use Symfony\Component\Yaml\Yaml;
+
+
 class BackupCommand extends Command
 {
     /**
@@ -33,8 +36,11 @@ class BackupCommand extends Command
     {
         // $local = new Local('/home/alkeidon/test/');
 
+	$value = Yaml::parseFile('config_example.yml', Yaml::PARSE_OBJECT_FOR_MAP);
 
-	new S3();
+dd($value);
+
+	// new S3();
 
         // $zip = new PkZip('/home/alkeidon/test.zip');
         // $zip->add('test.txt', time());
