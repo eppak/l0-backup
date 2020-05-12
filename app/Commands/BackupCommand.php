@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use Eppak\Local;
 use Eppak\PkZip;
+use Eppak\S3;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
@@ -30,9 +31,10 @@ class BackupCommand extends Command
      */
     public function handle()
     {
-        $local = new Local('/home/alkeidon/test/');
+        // $local = new Local('/home/alkeidon/test/');
 
 
+	new S3();
 
         // $zip = new PkZip('/home/alkeidon/test.zip');
         // $zip->add('test.txt', time());
