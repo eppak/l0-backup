@@ -21,12 +21,12 @@ class S3 implements Archive
 	{
 		$client = new S3Client([
 		    'credentials' => [
-		        'key'    => $configuration->get('s3.key'),
-		        'secret' => $configuration->get('s3.secret'),
+		        'key'    => $configuration->get('s3.key', 'KEY'),
+		        'secret' => $configuration->get('s3.secret', 'SECRET'),
 		    ],
             'version' => 'latest',
-		    'region' => $configuration->get('s3.region'),
-		    'endpoint' => $configuration->get('s3.endpoint')
+		    'region' => $configuration->get('s3.region', 'REGION'),
+		    'endpoint' => $configuration->get('s3.endpoint', 'https://example.com/end-point')
 		]);
 
 		$adapter = new AwsS3Adapter($client, $configuration->get('s3.bucket'));

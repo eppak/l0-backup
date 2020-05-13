@@ -20,6 +20,7 @@
         "laravel-zero/framework": "^7.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-ziparchive": "^1.0",
+        "m1/env": "^2.2",
         "spatie/db-dumper": "^2.16",
         "symfony/process": "^5.0",
         "symfony/yaml": "^5.0"
