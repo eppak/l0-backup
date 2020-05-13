@@ -12,13 +12,13 @@ sites:
     one:
         destination: '/one'
         assets:
-           db: '.env'
+           db: '/home/www/site/example.com/.env'
            files:
                - '/home/www/site/example.com/storage/app'
     two:
         destination: '/two'
         assets:
-          db: '.env'
+          db: '/home/www/site/example.org/.env'
           files:
               - '/home/www/site/example.org/storage/app'
 

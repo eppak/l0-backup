@@ -2,6 +2,7 @@
 
 use Eppak\Archives\S3;
 use Eppak\Contracts\Context;
+use Eppak\Dumper\Factory;
 use Exception;
 use Illuminate\Support\Facades\File;
 
@@ -50,13 +51,13 @@ class Backup
                 $this->context->startTask("SITE {$name}", 'Creating...');
 
                 $this->files($name, $files);
-                $this->db($name, $db);
+                $this->dump($name, $db);
                 $this->move($destination, $name);
 
-                $size += File::size($this->temp($name));
+                $size += File::size($this->archive($name));
                 $this->context->endTask("SITE {$name}", 'Done', true);
 
-                File::delete($this->temp($name));
+                File::delete($this->archive($name));
             } catch (Exception $e) {
                 $this->context->endTask("SITE {$name}",false, $e->getMessage());
             }
@@ -65,43 +66,46 @@ class Backup
         $this->context->info("TOTAL " . hrSize($size));
     }
 
-    private function temp($name)
+    private function archive($name)
     {
         $temp = $this->configuration->get('tmp');
 
         return "{$temp}/{$name}.zip";
     }
 
+    private function db($name)
+    {
+        $temp = $this->configuration->get('tmp');
+
+        return "{$temp}/{$name}.sql";
+    }
+
     private function move($destination, $name)
     {
         $to = "{$destination}/{$name}.zip";
 
-        $this->archive->put($to, File::get($this->temp($name)));
+        $this->archive->put($to, File::get($this->archive($name)));
     }
 
-    private function db($name, $config)
+    private function dump($name, $config)
     {
-        //$zip = new PkZip($this->temp($name));
-        $temp = $this->configuration->get('tmp');
-        $dump = "{$temp}/{$name}.sql";
+        if ($config == '') {
+            return;
+        }
 
-        // TODO
-        /*
+        $filename = $this->db($name);
+        $zip = new PkZip($this->archive($name));
+        $dumper = Factory::make($config);
 
-        Spatie\DbDumper\Databases\MySql::create()
-            ->setDbName($databaseName)
-            ->setUserName($userName)
-            ->setPassword($password)
-            ->dumpToFile($dump);
+        $dumper->dump($filename);
 
-        $zip->add($dump);
+        $zip->add($filename);
         $zip->close();
-        */
     }
 
     private function files($name, $files)
     {
-        $zip = new PkZip($this->temp($name));
+        $zip = new PkZip($this->archive($name));
 
         foreach ($files as $file) {
             $zip->directory($file);
