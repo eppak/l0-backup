@@ -99,12 +99,16 @@ class Backup
 
         $dumper->dump($filename);
 
-        $zip->add($filename);
+        $zip->file($filename);
         $zip->close();
     }
 
     private function files($name, $files)
     {
+	if ($files == null) {
+		return;
+	}
+
         $zip = new PkZip($this->archive($name));
 
         foreach ($files as $file) {

@@ -1,8 +1,9 @@
 <?php namespace Eppak\Dumper;
 
-use Eppak\Contracts\Dumper;
-use Str;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Eppak\Dumper\MySql;
+use Eppak\Contracts\Dumper;
 use M1\Env\Parser as Env;
 
 /**
@@ -22,7 +23,9 @@ class Factory
     private static function parse(string $config): ?array
     {
         if (Str::endsWith($config, '.env')) {
-            return new Env(File::get('/var/www/cloud/.env'));
+	    $values = new Env(File::get('/var/www/cloud/.env'));
+
+            return $values->lines;
         }
 
         return null;
@@ -34,7 +37,7 @@ class Factory
 
         switch ($type) {
             case 'mysql':
-                return new Mysql($config);
+                return new MySql($config);
 
             default:
                 return null;

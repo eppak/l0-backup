@@ -1,4 +1,4 @@
-<?php namespace Eppak\Dumper;
+<?php namespace Eppak\Dumper; 
 
 use Spatie\DbDumper\Databases\MySql as Driver;
 use Eppak\Contracts\Dumper;
@@ -31,9 +31,11 @@ class Mysql implements Dumper
     public function dump(string $filename): bool
     {
         Driver::create()
-            ->setDbName($this->config['db'])
-            ->setUserName($this->config['username'])
-            ->setPassword($this->config['password'])
+	    ->setHost($this->config['DB_HOST'])
+	    ->setPort($this->config['DB_PORT'])
+            ->setDbName($this->config['DB_DATABASE'])
+            ->setUserName($this->config['DB_USERNAME'])
+            ->setPassword($this->config['DB_PASSWORD'])
             ->dumpToFile($filename);
 
         return true;

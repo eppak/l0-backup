@@ -46,10 +46,7 @@ class BackupCommand extends Command
      */
     public function handle(Backup $backup)
     {
-        // $backup->run(new Context($this));
-	$env = new \M1\Env\Parser(file_get_contents('/var/www/cloud/.env'));
-
-	dd($env);
+        $backup->run(new Context($this));
 
         return 0;
     }
